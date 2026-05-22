@@ -2,165 +2,192 @@
 
 _[Ελληνικά](/whitepaper/el.md)_
 
-## Returning the Local Economy to the People
+# The Problem
 
-**Version:** 1.0 (Draft)
+In 2023, the American Dialect Society chose '**Enshittification**' as the word
+of the year. Cory Doctorow, who coined the term, uses this word to describe the
+process by which a platform that mediates between two or more parties starts by
+offering value to all sides and then, as it achieves market dominance, exploits
+one side for the benefit of the other and ultimately ends up exploiting all
+sides for its own benefit.
 
-**Author:** Konstantinos Bairaktaris/@kbairak  
-_Former Principal Engineer & Engineering Manager @ Transifex | Staff+ Engineer @
-Plum | Patras, Greece_
+In the food delivery space, digital platforms started by making the ordering
+process more convenient and easier.
 
-**Status:** Pre-Seed Phase — Solo founder seeking collaborators with expertise
-in cooperative law, logistics/operations, and local organizing. No code yet,
-governance model in development.
+- This provided value to consumers as they could more easily place orders and
+  gave them access to a catalog of restaurants they might have previously
+  ignored, and it also provided value to restaurant owners and delivery workers
+  as it increased the overall volume of orders.
+- Over time, **they began to exploit the delivery workers**, pressuring them to
+  work as, nominally, freelancers, avoiding the provision of labor rights such
+  as paid leave, continued payment in case of injury, provision of safety
+  equipment, etc., culminating in the use of the algorithm that determines
+  routes to reward or punish specific behaviors. This form of work has become
+  established as the **gig economy**. At this stage, one could argue that this
+  exploitation works to the benefit of restaurants and consumers as the savings
+  from the labor costs of delivery workers could be returned as lower
+  commissions to restaurants and lower prices to consumers. In a sense, the
+  platform takes on the service of exploiting delivery workers as a
+  _subcontractor_, something that restaurant owners might find difficult or
+  distasteful.
+- Next, the platforms **turned their sights on restaurants**, pressuring them to
+  make offers or pay for _promotional packages_ in order to appear high in the
+  results lists (or otherwise to avoid being penalized by appearing lower) and
+  imposing increasingly higher commissions, something against which restaurants
+  cannot defend as their withdrawal from the platform automatically entails a
+  noticeable decrease in revenue.
+- Having dominated two of the three sides of this transaction, **the consumers
+  are next**, who are forced to pay service fees for each order and are
+  pressured to pay subscriptions in order to have priority in deliveries (or
+  otherwise to avoid being penalized with delayed deliveries).
 
----
+In the end, the platform has transformed from a **facilitator** to a **digital
+rent-seeker**, imposing precarious work on delivery workers, pushing restaurants
+operating on tight margins to closure, and extracting resources from local
+economies and transferring them to the pockets of the platforms' shareholders.
 
-## 1. The Problem: The "Enshittification" of Delivery
+# The Solution: Multi-Stakeholder Cooperative Platforms
 
-Modern delivery platforms have transitioned from market facilitators to
-**rent-seekers**. Having achieved market dominance, they now exploit all
-participants through:
+The original promise - the utilization of technology to make an aspect of our
+lives more convenient - remains hidden beneath this edifice of exploitation and
+awaits us to find a way to bring it back and put it to work for the benefit of
+all stakeholders and the local economy. By carefully reading the problem and
+reverse-engineering, we arrive at the solution of the **cooperative platform**
+with equal participation of the three sides - the restaurants, the delivery
+workers, and the consumers - in ownership and governance. The result is a
+platform that works in a very similar way to the existing ones. The consumer,
+through an app, chooses from a catalog of restaurants, selects what food they
+want to order, pays by card, the restaurant receives a notification, accepts and
+prepares the order, the delivery worker receives a route, picks up the order and
+delivers it to the consumer. The difference is that
 
-- **Exorbitant Commissions:** Taking 25-35% from small businesses already
-  operating on thin margins.
-- **Algorithmic Oppression:** Using "black-box" logic to pressure couriers into
-  unsafe or underpaid labor.
-- **User Degradation:** Inflating prices through hidden service fees and data
-  harvesting.
-- **The Exit Trap:** Prioritizing shareholder returns over the sustainability of
-  the local economy.
+- The restaurant receives a larger share of the order value,
+- The delivery worker is paid better, with a fixed salary and guaranteed labor
+  rights,
+- The routing algorithm and the financial data from which commissions and wage
+  levels are derived are transparent and openly communicated to stakeholders,
+- The consumer feels that their enjoyment is not based on exploitation and that
+  their money remains in the local economy,
+- The stakeholders participate in the governance of the platform and
+- The app does not have all the features that enable exploitation.
 
----
+We consider this last point an advantage; the ranking of restaurants in the app
+is based on neutral criteria (distance), reviews and ratings are not supported
+(if you want to share your opinion about a restaurant you can write in a forum)
+and coupons, special offers and notifications intended to remind you that you
+are hungry are absent. This ethical design makes the app fair to restaurants and
+the development and maintenance of the software more manageable.
 
-## 2. The Solution: Platform Cooperativism
+Such platforms are not just a theoretical idea. Cooperative platforms like
+[Radish](https://radish.coop/en) (multi-stakeholder food delivery cooperative in
+Montreal), [Stocksy](https://www.stocksy.com/) (stock photo agency owned by
+photographers), [Fairbnb](https://fairbnb.coop/) (community-powered vacation
+rentals), and hundreds of others in the [Platform.coop](https://platform.coop/)
+network prove that member-owned platforms can compete with extractive
+incumbents.
 
-**OurFood** is an Open Source, multi-stakeholder cooperative platform. It is not
-owned by venture capitalists, but by the people who produce, deliver, and
-consume the value.
+# Democratic Governance
 
-> **This isn't theoretical.** Platform cooperatives like
-> [Radish](https://radish.coop/en) (Montreal's multi-stakeholder food delivery
-> co-op), [Stocksy](https://www.stocksy.com/) (photographer-owned stock agency),
-> [Fairbnb](https://fairbnb.coop/) (community-powered vacation rentals), and
-> hundreds of others in the [Platform.coop network](https://platform.coop/)
-> prove that member-owned platforms can compete with extractive incumbents.
+![governance](governance.png)
 
-### 2.1 The Triple-Stakeholder Model
+Participation in governance is shared equally among the three sides - the
+restaurants, the delivery workers, and the consumers - and within each member
+category, participation is also shared equally. This means that the total
+influence of consumers, although they are the most numerous group, has the same
+weight as the influence of restaurants and the influence of delivery workers. We
+recognize that the platform mediates between sides with conflicting interests
+and in order to prevent exploitation we ensure there is a **permanent balance of
+power**. As with other cooperative platforms, the staff that takes care of the
+platform's operation - the developers, management, and other operational
+positions - are hired as permanent employees with appropriate market wages but
+**do not participate** in the ownership of the cooperative. Management obviously
+has a say in how the platform operates at on a daily level but is fully
+accountable to the actual owners. The absence of staff participation in
+ownership is a conscious decision as we recognize that the platform, through its
+position as mediator, inherently has influence and the way to prevent the staff
+from becoming exploitative is to make them accountable to the actual
+stakeholders.
 
-Governance is split across three distinct member classes to ensure a permanent
-balance of power:
+Democratic participation is facilitated by the app itself. Through the app, any
+member-owner at any time can withdraw their trust from management and the
+withdrawal of trust by a sufficient number of members (applying the 33/33/33
+split of influence) automatically triggers the convening of a general assembly.
+The app also facilitates voting and provides notifications for upcoming
+participatory processes.
 
-- **33% Merchants (The Producers):** Focused on sustainability, fair pricing,
-  and direct customer relationships.
-- **33% Riders (The Workforce):** Focused on fair wages, transparent
-  dispatching, and workplace safety.
-- **33% Consumers (The Community):** Focused on service quality, data privacy,
-  and ethical consumption.
+The legal structure of the cooperative is subject to the provisions of the
+legislative framework within which it operates. It is possible that the ideal
+bylaws that would implement the specifications we have described may not be
+fully compatible with existing legislation. Appropriate research and groundwork
+must be carried out to ensure the resulting bylaws are as close as possible to
+what we describe while also operating within the legal framework.
 
-Within each member class, voting rights are spread equally—since classes differ
-in size, merchants and couriers have greater individual voting weight than
-consumers, whose votes are further weighted by recent platform activity. Beyond
-voting, the platform only works if all three classes participate
-equally—exploiting any group would simply drive them away.
+# Technology
 
-> Management (The developers and CEO) 0% voting power since they already have
-> enough influence by being in control of the platform; that's how existing
-> platforms operate.
+The platform's software will be **open source**. This serves several purposes
+such as transparency to member-owners and the community about how routes and
+commissions are determined, contribution from the wider developer community, and
+facilitating the spread of the movement to more cities. Any community in any
+city will be free to copy the software to set up a local cooperative/node.
+Maintaining the software by all nodes and the community will share the cost,
+making the venture even more sustainable.
 
-### 2.2. Built-In Democratic Accountability
+At a later stage, after there have been one or more successful nodes, we propose
+the creation of a **non-profit organization** that will be responsible for the
+development and maintenance of the software and providing assistance in the
+establishment of new nodes. The software itself will be able to run on a server
+managed by the non-profit organization with the nodes using it as subscribers
+(Software-as-a-Service model), making the process even easier for new nodes, as
+they will be able to utilize the platform without hiring a team of developers.
+This parameter - that the platform should support multiple nodes
+simultaneously - must be taken into account during the initial software design.
 
-Unlike traditional companies where oversight happens only at scheduled board
-meetings, OurFood embeds democratic accountability directly into the platform.
+# Economic Sustainability
 
-The app is designed to support continuous member participation: raising
-concerns, triggering reviews, and facilitating votes—all through the interface.
-The goal is to make oversight accessible and ongoing, not limited to quarterly
-meetings.
+During the platform's daily operation, we subtract from total revenue the amount
+corresponding to wages, operating expenses, and a safety reserve and **all the
+remaining** amount is returned to the restaurants. In this way we aim for
+significantly lower commissions to restaurants than those offered by incumbent
+platforms. All financial figures, estimates, and decisions are transparent and
+communicated to members in advance. The fact that existing platforms are
+profitable proves that there is room for the cooperative to be both sustainable
+and provide lower commissions and better wages to delivery workers, since profit
+extraction to shareholders is eliminated. At the same time, we recognize that a
+prerequisite for sustainability is economies of scale.
 
-**Implementation flexibility:** The specific legal structure—how the 33/33/33
-stakeholder balance is encoded, what voting mechanisms are permitted, which
-decisions require member votes—will be determined by local cooperative law in
-each jurisdiction. The platform's technology is built to support democratic
-governance; the legal framework adapts to what each country's laws allow.
+We estimate that attracting restaurants to the platform will be easy as they do
+not assume any risk; they can continue to serve orders from existing platforms
+while simultaneously testing the cooperative's lower commissions. To the extent
+that the venture remains sustainable, attracting delivery workers will also be
+easy as we will provide better compensation and employment stability. The
+biggest challenge is attracting consumers. Great emphasis must be placed on
+promotional campaigns that focus on the social aspect of the venture and members
+must actively participate in promotion. It will also be important that the
+initial launch is accompanied by a large number of restaurants and users.
 
----
+We must be ready to face practices of fair or unfair competition from existing
+platforms. We estimate that the best defense is to highlight the social
+character of the cooperative and to collaborate with members who align with our
+mission. The most important tool, however, is, again, starting operations with a
+large number of restaurants and users. If the platform is adopted by a critical
+mass, any attempts by existing platforms to secure exclusive contracts with
+merchants may potentially work in our favor.
 
-## 3. Technology: The Digital Commons
+# Roadmap
 
-We believe the software for a city's food infrastructure should be a **Public
-Good**.
+- **Phase 0. Preparation until the official launch of the cooperative**: Through
+  research and dialogue with interested parties and prospective members,
+  clarification of open questions, seeking funding, adaptation of materials,
+  including this document. We are in this phase now.
+- **Phase 1. Operation of first node**: Full operation of the platform in one
+  city. The goal is to prove that the venture delivers on its promise while
+  remaining sustainable.
+- **Phase 2. Expansion**: Establishment of nodes in other cities with the
+  support and help of the first node. Establishment of a non-profit organization
+  for the development and maintenance of the software and the provision of
+  support to new nodes.
 
-- **Open Source (AGPL License):** The core protocol is transparent and
-  auditable. Any city can "clone" the stack to start their own local node.
-- **Data Sovereignty:** Merchants own their customer data. Riders own their
-  performance history. Neither can be sold or exploited by the platform or
-  others.
-- **Modular Architecture:** Designed to be lightweight. A "Node" can be deployed
-  for a single neighborhood or an entire metropolis.
-- **User Experience First:** Fast, intuitive apps competitive with incumbents.
-  Ethical alternatives only succeed if they're also excellent products.
-
----
-
-## 4. Economic Sustainability: The Anti-Profit Model
-
-Incumbent platforms extract 35-45% in total fees (merchant commissions +
-delivery charges + service fees) and remain highly profitable.
-
-**OurFood targets significantly lower total costs** while providing fair courier
-wages and sustainable operations. Since incumbent platforms are profitable, cost
-savings are possible by eliminating shareholder extraction. The difference
-returns to merchants and couriers rather than external investors.
-
-The platform's revenue covers:
-
-1. **Courier wages** — Fair compensation with benefits, insurance, equipment;
-   middle-class stability, not gig poverty
-2. **Operations** — Development, management, marketing
-3. **Runway reserve** — Safety buffer for seasonal fluctuations
-
-All cost projections are transparent and communicated to members in advance.
-Surplus either strengthens the reserve or returns to merchants and
-couriers—never to external investors.
-
-**Management has no ownership stake.** Developers and staff are hired
-competitively with market-appropriate wages but no voting power. As the software
-matures and spreads across cities, per-node development costs decrease
-significantly as maintenance costs are shared across the federation.
-
----
-
-## 5. Roadmap: The Path to Independence
-
-1. **Phase 0 (Genesis):** Publish the protocol specification and governance
-   model. Begin development of the first node.
-2. **Phase 1 (The Sandbox):** Launch in a single neighborhood with 15-20 anchor
-   merchants and a core group of worker-owners. Merchants join with no
-   commitment, continuing to serve existing platforms while testing the
-   lower-fee model.
-3. **Phase 2 (The Federation):** As successful nodes multiply, establish a
-   non-profit foundation to maintain the shared open-source platform and help
-   setup new nodes in other cities.
-
-### Phase 0 Priorities
-
-Key questions to resolve during the Genesis phase:
-
-- **Funding model:** Grants, member buy-in, founding backers, or hybrid approach
-- **Legal structure:** Cooperative registration framework and jurisdiction
-- **Regulatory compliance:** Payment processing, labor law, food safety,
-  insurance requirements
-- **Competitive defense:** Counter tactics against predatory pricing, exclusive
-  merchant contracts, and regulatory capture—strategies include rapid
-  simultaneous launch, political partnerships (unions, city government), and
-  targeting mission-aligned merchants
-- **Initial traction:** Consumer acquisition strategy (network effects,
-  community partnerships), merchant recruitment
-
----
-
-## How to Help
+# How to Help
 
 This is a solo effort in the earliest stages. I'm looking for:
 
@@ -168,16 +195,10 @@ This is a solo effort in the earliest stages. I'm looking for:
 - **Co-founders:** Operations/logistics, community organizing, legal/compliance
 - **Subject matter experts:** Cooperative law (especially Greece/EU), food
   delivery economics, platform governance
-- **Early stakeholders:** Merchants, couriers, or consumers in mid-sized cities
-  willing to pilot
+- **Early stakeholders:** Merchants, delivery workers, or consumers in mid-sized
+  cities willing to pilot
 
 If any of this resonates, reach out.
 
----
-
-### Join the Platform. Own the Future
-
-_Interested in building this together? Get in touch._
-
-**<https://github.com/kbairak/OurFood>** | **Community (Coming Soon)** |
-**<ikijob@gmail.com>**
+[https://github.com/kbairak/OurFood](https://github.com/kbairak/OurFood) |
+Community forum/chat (coming soon) | [ikijob@gmail.com](mailto:ikijob@gmail.com)
