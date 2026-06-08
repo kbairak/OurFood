@@ -145,8 +145,13 @@ function saveStats() {
   const runs = JSON.parse(localStorage.getItem(SAVED_RUNS_KEY) || "{}");
   runs[key] = {
     params: {
-      NUM_RESTAURANTS, NUM_COURIERS, AVG_TRAVEL_MINUTES,
-      ORDER_RATE, AVG_PREP_MINUTES, PREP_STDDEV_MINUTES, MAX_BATCH_SIZE,
+      NUM_RESTAURANTS,
+      NUM_COURIERS,
+      AVG_TRAVEL_MINUTES,
+      ORDER_RATE,
+      AVG_PREP_MINUTES,
+      PREP_STDDEV_MINUTES,
+      MAX_BATCH_SIZE,
     },
     metrics: { efficiency, avgDelay, utilization },
   };
@@ -155,23 +160,28 @@ function saveStats() {
 }
 
 function applyParams(params) {
-  NUM_RESTAURANTS     = params.NUM_RESTAURANTS;
-  NUM_COURIERS        = params.NUM_COURIERS;
-  AVG_TRAVEL_MINUTES  = params.AVG_TRAVEL_MINUTES;
-  ORDER_RATE          = params.ORDER_RATE;
-  AVG_PREP_MINUTES    = params.AVG_PREP_MINUTES;
+  NUM_RESTAURANTS = params.NUM_RESTAURANTS;
+  NUM_COURIERS = params.NUM_COURIERS;
+  AVG_TRAVEL_MINUTES = params.AVG_TRAVEL_MINUTES;
+  ORDER_RATE = params.ORDER_RATE;
+  AVG_PREP_MINUTES = params.AVG_PREP_MINUTES;
   PREP_STDDEV_MINUTES = params.PREP_STDDEV_MINUTES;
-  MAX_BATCH_SIZE      = params.MAX_BATCH_SIZE ?? 1;
-  COURIER_SPEED       = (0.5214 * CANVAS_SIZE) / AVG_TRAVEL_MINUTES;
+  MAX_BATCH_SIZE = params.MAX_BATCH_SIZE ?? 1;
+  COURIER_SPEED = (0.5214 * CANVAS_SIZE) / AVG_TRAVEL_MINUTES;
 
   document.getElementById("slider-travel").value = AVG_TRAVEL_MINUTES;
   document.getElementById("p-travel").textContent = AVG_TRAVEL_MINUTES + " min";
-  document.getElementById("slider-order-interval").value = Math.round(ORDER_RATE * 960);
-  document.getElementById("p-order-rate").textContent = Math.round(ORDER_RATE * 960) + " /day";
+  document.getElementById("slider-order-interval").value = Math.round(
+    ORDER_RATE * 960,
+  );
+  document.getElementById("p-order-rate").textContent =
+    Math.round(ORDER_RATE * 960) + " /day";
   document.getElementById("slider-prep-mean").value = AVG_PREP_MINUTES;
-  document.getElementById("p-prep-mean").textContent = AVG_PREP_MINUTES + " min";
+  document.getElementById("p-prep-mean").textContent =
+    AVG_PREP_MINUTES + " min";
   document.getElementById("slider-prep-stddev").value = PREP_STDDEV_MINUTES;
-  document.getElementById("p-prep-stddev").textContent = "± " + PREP_STDDEV_MINUTES + " min";
+  document.getElementById("p-prep-stddev").textContent =
+    "± " + PREP_STDDEV_MINUTES + " min";
   document.getElementById("slider-batch").value = MAX_BATCH_SIZE;
   document.getElementById("p-batch").textContent = MAX_BATCH_SIZE;
 
@@ -200,9 +210,14 @@ function renderSavedRuns() {
     const metricsEl = document.createElement("div");
     metricsEl.className = "saved-run-metrics";
     metricsEl.textContent =
-      "eff " + metrics.efficiency.toFixed(1) +
-      " · delay " + metrics.avgDelay.toFixed(1) + "m" +
-      " · util " + metrics.utilization.toFixed(0) + "%";
+      "eff " +
+      metrics.efficiency.toFixed(1) +
+      " · delay " +
+      metrics.avgDelay.toFixed(1) +
+      "m" +
+      " · util " +
+      metrics.utilization.toFixed(0) +
+      "%";
     item.appendChild(metricsEl);
 
     const btns = document.createElement("div");
@@ -231,14 +246,14 @@ function renderSavedRuns() {
 }
 
 function saveParams() {
-  localStorage.setItem("fa_NUM_RESTAURANTS",     NUM_RESTAURANTS);
-  localStorage.setItem("fa_NUM_COURIERS",        NUM_COURIERS);
-  localStorage.setItem("fa_AVG_TRAVEL_MINUTES",  AVG_TRAVEL_MINUTES);
-  localStorage.setItem("fa_ORDER_RATE",          ORDER_RATE);
-  localStorage.setItem("fa_AVG_PREP_MINUTES",    AVG_PREP_MINUTES);
+  localStorage.setItem("fa_NUM_RESTAURANTS", NUM_RESTAURANTS);
+  localStorage.setItem("fa_NUM_COURIERS", NUM_COURIERS);
+  localStorage.setItem("fa_AVG_TRAVEL_MINUTES", AVG_TRAVEL_MINUTES);
+  localStorage.setItem("fa_ORDER_RATE", ORDER_RATE);
+  localStorage.setItem("fa_AVG_PREP_MINUTES", AVG_PREP_MINUTES);
   localStorage.setItem("fa_PREP_STDDEV_MINUTES", PREP_STDDEV_MINUTES);
-  localStorage.setItem("fa_SIM_SPEED",           SIM_SPEED);
-  localStorage.setItem("fa_MAX_BATCH_SIZE",      MAX_BATCH_SIZE);
+  localStorage.setItem("fa_SIM_SPEED", SIM_SPEED);
+  localStorage.setItem("fa_MAX_BATCH_SIZE", MAX_BATCH_SIZE);
 }
 
 function init() {
@@ -247,15 +262,15 @@ function init() {
     const v = localStorage.getItem(key);
     return v !== null ? +v : fallback;
   }
-  NUM_RESTAURANTS     = ls("fa_NUM_RESTAURANTS",     NUM_RESTAURANTS);
-  NUM_COURIERS        = ls("fa_NUM_COURIERS",        NUM_COURIERS);
-  AVG_TRAVEL_MINUTES  = ls("fa_AVG_TRAVEL_MINUTES",  AVG_TRAVEL_MINUTES);
-  ORDER_RATE          = ls("fa_ORDER_RATE",          ORDER_RATE);
-  AVG_PREP_MINUTES    = ls("fa_AVG_PREP_MINUTES",    AVG_PREP_MINUTES);
+  NUM_RESTAURANTS = ls("fa_NUM_RESTAURANTS", NUM_RESTAURANTS);
+  NUM_COURIERS = ls("fa_NUM_COURIERS", NUM_COURIERS);
+  AVG_TRAVEL_MINUTES = ls("fa_AVG_TRAVEL_MINUTES", AVG_TRAVEL_MINUTES);
+  ORDER_RATE = ls("fa_ORDER_RATE", ORDER_RATE);
+  AVG_PREP_MINUTES = ls("fa_AVG_PREP_MINUTES", AVG_PREP_MINUTES);
   PREP_STDDEV_MINUTES = ls("fa_PREP_STDDEV_MINUTES", PREP_STDDEV_MINUTES);
-  SIM_SPEED           = ls("fa_SIM_SPEED",           SIM_SPEED);
-  MAX_BATCH_SIZE      = ls("fa_MAX_BATCH_SIZE",      MAX_BATCH_SIZE);
-  COURIER_SPEED       = (0.5214 * CANVAS_SIZE) / AVG_TRAVEL_MINUTES;
+  SIM_SPEED = ls("fa_SIM_SPEED", SIM_SPEED);
+  MAX_BATCH_SIZE = ls("fa_MAX_BATCH_SIZE", MAX_BATCH_SIZE);
+  COURIER_SPEED = (0.5214 * CANVAS_SIZE) / AVG_TRAVEL_MINUTES;
 
   function wire(sliderId, getValue, setValue, displayId, fmt) {
     const el = document.getElementById(sliderId);
@@ -352,7 +367,9 @@ function init() {
     retireCourier,
   );
 
-  document.getElementById("btn-save-stats").addEventListener("click", saveStats);
+  document
+    .getElementById("btn-save-stats")
+    .addEventListener("click", saveStats);
   document.getElementById("btn-reset").addEventListener("click", reset);
   document.getElementById("btn-pause").addEventListener("click", () => {
     paused = !paused;
@@ -403,8 +420,8 @@ function routeDistance(x, y, stops) {
 // All valid PDP stop orderings for a set of orders (pickup before delivery constraint)
 function validSequences(orders) {
   const allStops = orders.flatMap((o) => [
-    { type: "pickup",   order: o, x: o.restaurant.x, y: o.restaurant.y },
-    { type: "delivery", order: o, x: o.destX,        y: o.destY        },
+    { type: "pickup", order: o, x: o.restaurant.x, y: o.restaurant.y },
+    { type: "delivery", order: o, x: o.destX, y: o.destY },
   ]);
 
   const results = [];
@@ -436,7 +453,10 @@ function validSequences(orders) {
 // All combinations of exactly k elements from pool
 function* orderCombinations(pool, k) {
   function* gen(start, current) {
-    if (current.length === k) { yield current; return; }
+    if (current.length === k) {
+      yield current;
+      return;
+    }
     for (let i = start; i <= pool.length - (k - current.length); i++)
       yield* gen(i + 1, [...current, pool[i]]);
   }
@@ -650,6 +670,69 @@ function tryMatch() {
     }
     idle.splice(idle.indexOf(bestCourier), 1);
   }
+
+  // Opportunistic insertion: splice remaining unclaimed orders into en-route couriers
+  if (unclaimedOrders.length > 0) tryInsertUnclaimed();
+}
+
+// For each unclaimed order, find the cheapest insertion point in any en-route courier's route
+function tryInsertUnclaimed() {
+  for (const order of [...unclaimedOrders]) {
+    let bestCost = Infinity,
+      bestCourier = null,
+      bestStops = null;
+
+    const pickup = {
+      type: "pickup",
+      order,
+      x: order.restaurant.x,
+      y: order.restaurant.y,
+    };
+    const delivery = {
+      type: "delivery",
+      order,
+      x: order.destX,
+      y: order.destY,
+    };
+
+    for (const c of couriers) {
+      if (c.state === "idle" || c.retiring) continue;
+
+      // committed = orders already on board + orders not yet picked up
+      // must stay below MAX_BATCH_SIZE after adding one more
+      const committed =
+        c.carrying.length + c.stops.filter((s) => s.type === "pickup").length;
+      if (committed >= MAX_BATCH_SIZE) continue;
+
+      const baseDist = routeDistance(c.x, c.y, c.stops);
+
+      // Insert pickup at position pi, delivery at position dj (both ≥ 1: never before current stop)
+      for (let pi = 1; pi <= c.stops.length; pi++) {
+        for (let dj = pi; dj <= c.stops.length; dj++) {
+          const newStops = [
+            ...c.stops.slice(0, pi),
+            pickup,
+            ...c.stops.slice(pi, dj),
+            delivery,
+            ...c.stops.slice(dj),
+          ];
+          const cost = routeDistance(c.x, c.y, newStops) - baseDist;
+          if (cost < bestCost) {
+            bestCost = cost;
+            bestCourier = c;
+            bestStops = newStops;
+          }
+        }
+      }
+    }
+
+    if (bestCourier) {
+      bestCourier.stops = bestStops;
+      order.courierId = bestCourier.id;
+      activeOrders.push(order);
+      unclaimedOrders.splice(unclaimedOrders.indexOf(order), 1);
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -831,9 +914,7 @@ function updateStats() {
       utilization.toFixed(1) + "%";
 
     const multiCarry =
-      totalCarryingMin > 0
-        ? (totalMultiCarryMin / totalCarryingMin) * 100
-        : 0;
+      totalCarryingMin > 0 ? (totalMultiCarryMin / totalCarryingMin) * 100 : 0;
     document.getElementById("v-multicarry").textContent =
       multiCarry.toFixed(1) + "%";
   }
@@ -846,11 +927,20 @@ function updateStats() {
 let lastTs = null;
 let paused = false;
 
+const SIM_DT_MAX = 0.05; // sim-minutes per sub-step
+const MAX_SUB_STEPS = 100;
+
 function loop(ts) {
   if (lastTs !== null) {
     if (!paused) {
-      const dtReal = Math.min((ts - lastTs) / 1000, 0.1);
-      step(dtReal);
+      const dtRealTotal = Math.min((ts - lastTs) / 1000, 0.1);
+      const dtSimTotal = (dtRealTotal * SIM_SPEED) / 60;
+      const subSteps = Math.min(
+        MAX_SUB_STEPS,
+        Math.ceil(dtSimTotal / SIM_DT_MAX),
+      );
+      const dtRealSub = dtRealTotal / subSteps;
+      for (let i = 0; i < subSteps; i++) step(dtRealSub);
     }
     draw();
     updateStats();
