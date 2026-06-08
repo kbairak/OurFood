@@ -63,7 +63,7 @@ let restaurantIdSeq = 0;
 let courierIdSeq = 0;
 
 // Running totals for metrics
-let totalDelayMin = 0; // Σ max(0, pickedUpAt − readyAt) over completed orders
+let totalDelayMin = 0; // Σ dt for each (order, step) where simTime > order.optimalETA
 let totalOccupiedMin = 0; // Σ non-idle courier-minutes across all couriers
 let totalCarryingMin = 0; // Σ courier-minutes carrying ≥1 orders
 let totalMultiCarryMin = 0; // Σ courier-minutes carrying >1 orders simultaneously
@@ -134,11 +134,11 @@ function paramsKey() {
 }
 
 function saveStats() {
-  if (simTime <= 10 || completedOrders === 0) return;
+  if (simTime <= 10 || orderSeq === 0) return;
   const shiftFraction = simTime / 60 / SHIFT_HOURS;
   const liveCouriers = couriers.length;
   const efficiency = completedOrders / liveCouriers / shiftFraction;
-  const avgDelay = totalDelayMin / completedOrders;
+  const avgDelay = totalDelayMin / orderSeq;
   const utilization = (totalOccupiedMin / (liveCouriers * simTime)) * 100;
 
   const key = paramsKey();
@@ -512,6 +512,13 @@ function step(dtReal) {
     if (carryCount > 1) totalMultiCarryMin += dt;
   }
 
+  for (const o of unclaimedOrders) {
+    if (simTime > o.optimalETA) totalDelayMin += dt;
+  }
+  for (const o of activeOrders) {
+    if (simTime > o.optimalETA) totalDelayMin += dt;
+  }
+
   pruneRetiredRestaurants();
 }
 
@@ -539,13 +546,19 @@ function spawnOrder(atTime) {
   const rest = available[Math.floor(Math.random() * available.length)];
   const prepTime = normalRandom(AVG_PREP_MINUTES, PREP_STDDEV_MINUTES);
   const M = 20;
+  const destX = M + Math.random() * (CANVAS_SIZE - 2 * M);
+  const destY = M + Math.random() * (CANVAS_SIZE - 2 * M);
   const order = {
     id: orderSeq++,
     restaurant: rest,
-    destX: M + Math.random() * (CANVAS_SIZE - 2 * M),
-    destY: M + Math.random() * (CANVAS_SIZE - 2 * M),
+    destX,
+    destY,
     placedAt: atTime,
     readyAt: atTime + prepTime,
+    optimalETA:
+      atTime +
+      prepTime +
+      Math.hypot(rest.x - destX, rest.y - destY) / COURIER_SPEED,
     pickedUpAt: null,
     deliveredAt: null,
     courierId: null,
@@ -557,7 +570,6 @@ function spawnOrder(atTime) {
 function doPickup(c) {
   const stop = c.stops.shift();
   stop.order.pickedUpAt = simTime;
-  totalDelayMin += Math.max(0, simTime - stop.order.readyAt);
   c.carrying.push(stop.order);
   advanceStop(c);
 }
@@ -898,12 +910,12 @@ function updateStats() {
     (c) => !c.retiring,
   ).length;
 
-  if (simTime > 10 && completedOrders > 0) {
+  if (simTime > 10 && orderSeq > 0) {
     const shiftFraction = simTime / 60 / SHIFT_HOURS;
     const efficiency = completedOrders / liveCouriers / shiftFraction;
     document.getElementById("v-efficiency").textContent = efficiency.toFixed(1);
 
-    const avgDelay = totalDelayMin / completedOrders;
+    const avgDelay = totalDelayMin / orderSeq;
     document.getElementById("v-delay").textContent =
       avgDelay.toFixed(1) + " min";
   }
