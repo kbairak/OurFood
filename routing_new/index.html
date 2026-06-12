@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>routing_new</title>
+  </head>
+  <body>
+    <canvas id="app"></canvas>
+    <div id="stats">
+      <div class="group">
+        <h3>Parameters</h3>
+        <div class="row">
+          <span class="lbl">Restaurants</span
+          ><span class="val" id="p-restaurants"></span>
+        </div>
+        <input type="range" id="slider-restaurants" min="1" max="15" step="1" />
+        <div class="row">
+          <span class="lbl">Couriers</span
+          ><span class="val" id="p-couriers"></span>
+        </div>
+        <input type="range" id="slider-couriers" min="1" max="30" step="1" />
+        <div class="row">
+          <span class="lbl">Avg travel time</span
+          ><span class="val" id="p-travel"></span>
+        </div>
+        <input type="range" id="slider-travel" min="2" max="20" step="1" />
+        <div class="row">
+          <span class="lbl">Orders per day</span
+          ><span class="val" id="p-order-rate"></span>
+        </div>
+        <input
+          type="range"
+          id="slider-order-interval"
+          min="10"
+          max="2000"
+          step="10"
+        />
+        <div class="row">
+          <span class="lbl">Prep mean</span
+          ><span class="val" id="p-prep-mean"></span>
+        </div>
+        <input type="range" id="slider-prep-mean" min="2" max="40" step="1" />
+        <div class="row">
+          <span class="lbl">Prep std dev</span
+          ><span class="val" id="p-prep-stddev"></span>
+        </div>
+        <input type="range" id="slider-prep-stddev" min="0" max="20" step="1" />
+        <div class="row">
+          <span class="lbl">Batch size</span
+          ><span class="val" id="p-batch"></span>
+        </div>
+        <input type="range" id="slider-batch" min="1" max="4" step="1" />
+      </div>
+
+      <div class="group">
+        <h3>Simulation</h3>
+        <div class="row">
+          <span class="lbl">Time</span
+          ><span class="val" id="v-time">00:00</span>
+        </div>
+        <div class="row">
+          <span class="lbl">Speed</span><span class="val" id="v-speed">—</span>
+        </div>
+        <input
+          type="range"
+          id="speed-slider"
+          min="1"
+          max="120"
+          step="1"
+          value="60"
+        />
+        <div style="display: flex; gap: 6px; margin-top: 4px">
+          <button id="btn-pause" style="flex: 1">PAUSE</button>
+          <button id="btn-reset" style="flex: 1">RESET</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>Orders</h3>
+        <div class="row">
+          <span class="lbl">Completed</span
+          ><span class="val" id="v-completed">0</span>
+        </div>
+        <div class="row">
+          <span class="lbl">In flight</span
+          ><span class="val" id="v-inflight">0</span>
+        </div>
+        <div class="row">
+          <span class="lbl">Queued</span
+          ><span class="val" id="v-queued">0</span>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>Efficiency (proj. /courier /8h)</h3>
+        <div class="big-val" id="v-efficiency">—</div>
+      </div>
+
+      <div class="group">
+        <h3>Quality</h3>
+        <div class="row">
+          <span class="lbl">Avg order delay</span
+          ><span class="val" id="v-delay">—</span>
+        </div>
+        <div class="row">
+          <span class="lbl">Courier utilization</span
+          ><span class="val" id="v-util">—</span>
+        </div>
+        <div class="row">
+          <span class="lbl">Multi-carry %</span
+          ><span class="val" id="v-multicarry">—</span>
+        </div>
+      </div>
+    </div>
+    <div id="runs">
+      <button id="btn-save-stats">SAVE STATS</button>
+
+      <div class="group">
+        <h3>Saved Runs</h3>
+        <div id="saved-runs-list" style="font-size: 12px; color: #6060a0">
+          No saved runs yet.
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
