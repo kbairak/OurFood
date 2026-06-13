@@ -70,6 +70,7 @@ export class Node {
       Node.instances.delete(node);
     }
     this.instances.clear();
+    this.ids.clear();
   }
 
   step(_dt: number) {}

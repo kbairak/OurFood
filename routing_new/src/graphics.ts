@@ -25,14 +25,14 @@ export function drawCircle(
       ctx.fillText(label, position.x, position.y);
     }
   } else if (style === "dashed") {
-    ctx.strokeStyle = color + "cc";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = color + "77";
+    ctx.lineWidth = 1.5;
     ctx.setLineDash([5, 5]);
     ctx.stroke();
     ctx.setLineDash([]);
   } else {
-    ctx.strokeStyle = color + "99";
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = color + "aa";
+    ctx.lineWidth = 1;
     ctx.setLineDash([3, 7]);
     ctx.stroke();
     ctx.setLineDash([]);
@@ -49,7 +49,7 @@ export function drawLine(
   ctx.moveTo(start.x, start.y);
   ctx.lineTo(end.x, end.y);
   ctx.strokeStyle = color + "44";
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 4;
   ctx.setLineDash([4, 6]);
   ctx.stroke();
   ctx.setLineDash([]);
@@ -59,6 +59,7 @@ export function drawX(
   ctx: CanvasRenderingContext2D,
   position: Vector,
   color: string,
+  label?: string,
 ) {
   const size = 6;
   ctx.beginPath();
@@ -69,6 +70,14 @@ export function drawX(
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   ctx.stroke();
+
+  if (label) {
+    ctx.fillStyle = color;
+    ctx.font = "bold 11px Courier New";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "bottom";
+    ctx.fillText(label, position.x + size + 2, position.y - size);
+  }
 }
 
 export function drawBackground(ctx: CanvasRenderingContext2D) {

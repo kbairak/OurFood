@@ -1,6 +1,7 @@
 import { Node, Vector, Game } from "./lib";
 import { mulberry32, expRandom, pick, normalRandom } from "./rand";
 import { drawBackground, drawCircle, drawLine, drawX } from "./graphics";
+import { solveAssignment, type Candidate } from "./solver";
 
 const COLORS = [
   "#ff6b6b",
@@ -167,8 +168,11 @@ class Courier extends Node {
 
   draw(ctx: CanvasRenderingContext2D) {
     drawCircle(ctx, this.position, 10, `c${this.id}`, this.color, "line");
-    for (const routeElement of this.route) {
-      drawLine(ctx, routeElement.from, routeElement.to, this.color);
+    if (this.route.length > 0) {
+      drawLine(ctx, this.route[0].to, this.position, this.color);
+    }
+    for (const routeElement of this.route.slice(1)) {
+      drawLine(ctx, routeElement.to, routeElement.from, this.color);
     }
   }
 }
@@ -223,7 +227,9 @@ class Order extends Node {
         this.courier ? "dashed-bold" : "dashed",
       );
     }
-    drawX(ctx, this.destination, this.restaurant.color);
+    const overdue = Node.game.simTime - this.optimalTime;
+    const label = overdue > 0 ? `+${Math.round(overdue)}` : undefined;
+    drawX(ctx, this.destination, this.restaurant.color, label);
   }
 }
 
@@ -494,6 +500,17 @@ class MyGame extends Game {
       ),
     );
 
+    if (!this.tryMatchMip([...freeCouriers], unclaimedOrders)) {
+      this.tryMatchGreedy(freeCouriers, unclaimedOrders);
+    }
+
+    document.getElementById("v-queued")!.textContent =
+      `${unclaimedOrders.size}`;
+    document.getElementById("v-inflight")!.textContent =
+      `${(Order.instances as Set<Order>).size - unclaimedOrders.size}`;
+  }
+
+  tryMatchGreedy(freeCouriers: Set<Courier>, unclaimedOrders: Set<Order>) {
     while (freeCouriers.size > 0) {
       const best: {
         courier: Courier | null;
@@ -532,11 +549,226 @@ class MyGame extends Game {
         unclaimedOrders.delete(routeElement.order);
       }
     }
+  }
 
-    document.getElementById("v-queued")!.textContent =
-      `${unclaimedOrders.size}`;
-    document.getElementById("v-inflight")!.textContent =
-      `${(Order.instances as Set<Order>).size - unclaimedOrders.size}`;
+  // Stops that any route for this courier must contain: deliveries for
+  // carried orders (minus the in-progress first leg) and the delivery
+  // matching an in-progress pickup.
+  mandatoryStops(courier: Courier): Stop[] {
+    const stops: Stop[] = [];
+    for (const order of courier.carrying) {
+      if (
+        !(
+          courier.route[0]?.type === "deliver" &&
+          courier.route[0].order === order
+        )
+      ) {
+        stops.push(new Stop("deliver", order));
+      }
+    }
+    if (courier.route[0]?.type === "pickup") {
+      stops.push(new Stop("deliver", courier.route[0].order));
+    }
+    return stops;
+  }
+
+  // Set-partitioning MIP: enumerate candidate routes per courier (best
+  // sequence for each subset of nearby unclaimed orders), then let HiGHS
+  // pick one route per courier minimizing total delivery delay.
+  // Returns false if the solver isn't ready, so the caller can fall back
+  // to the greedy matcher.
+  tryMatchMip(couriers: Courier[], unclaimedOrders: Set<Order>): boolean {
+    // Candidate pool size per courier: pick the largest K such that the
+    // total number of candidate routes (couriers x subsets of a pool of
+    // up to 2K orders) stays within a budget, since enumeration and the
+    // MIP size explode combinatorially. Scale the budget with courier
+    // count so quality doesn't degrade when the fleet grows.
+    const BUDGET = Math.max(300, couriers.length * 15);
+    const subsetCount = (pool: number, batch: number) => {
+      let total = 1;
+      let comb = 1;
+      for (let i = 1; i <= batch; i++) {
+        comb = (comb * (pool - i + 1)) / i;
+        total += Math.max(0, comb);
+      }
+      return total;
+    };
+    let K_NEAREST = 8;
+    while (
+      K_NEAREST > 1 &&
+      couriers.length * subsetCount(2 * K_NEAREST, this.maxBatch) > BUDGET
+    ) {
+      K_NEAREST--;
+    }
+    const candidates: (Candidate & { route: Route })[] = [];
+
+    for (let ci = 0; ci < couriers.length; ci++) {
+      const courier = couriers[ci];
+      const mandatory = this.mandatoryStops(courier);
+      const capacity =
+        this.maxBatch -
+        courier.carrying.size -
+        (courier.route[0]?.type === "pickup" ? 1 : 0);
+      // Cap the candidate pool to keep enumeration tractable: the K
+      // nearest orders plus the K oldest (so distant orders can't starve
+      // outside the model forever). "Nearest" = minimum total detour
+      // (courier → restaurant → destination).
+      const detour = (order: Order) =>
+        order.restaurant.position.sub(courier.position).size() +
+        order.destination.sub(order.restaurant.position).size();
+      const nearest = new Set(
+        [...unclaimedOrders].sort((a, b) => detour(a) - detour(b)).slice(0, K_NEAREST),
+      );
+      for (const order of [...unclaimedOrders]
+        .sort((a, b) => a.placedAt - b.placedAt)
+        .slice(0, K_NEAREST)) {
+        nearest.add(order);
+      }
+
+      const subsets: Order[][] = [[]];
+      for (const order of nearest) {
+        const len = subsets.length;
+        for (let i = 0; i < len; i++) {
+          if (subsets[i].length < capacity) {
+            subsets.push([...subsets[i], order]);
+          }
+        }
+      }
+
+      for (const subset of subsets) {
+        const stops = [...mandatory];
+        for (const order of subset) {
+          stops.push(new Stop("pickup", order));
+          stops.push(new Stop("deliver", order));
+        }
+        if (stops.length === 0) {
+          candidates.push({
+            courierIndex: ci,
+            orderIds: [],
+            cost: 0,
+            route: courier.route,
+          });
+          continue;
+        }
+        const best: { route: Route | null; cost: number } = {
+          route: null,
+          cost: Infinity,
+        };
+        this.findMinDelayRoute(courier, courier.route, 0, stops, best);
+        if (best.route) {
+          candidates.push({
+            courierIndex: ci,
+            orderIds: subset.map((o) => o.id),
+            cost: best.cost,
+            route: best.route,
+          });
+        }
+      }
+    }
+
+    if (candidates.length === 0) return true;
+
+    // Penalty for leaving an order unassigned: the delay it would have
+    // accrued if it's still undelivered a horizon from now, plus a base
+    // so coverage is always preferred when capacity allows.
+    const HORIZON = 60;
+    const maxCost = candidates.reduce((m, c) => Math.max(m, c.cost), 0);
+    // Orders in no candidate are trivially unassigned; keep them out of
+    // the model so a big backlog doesn't bloat the LP.
+    const consideredIds = new Set(candidates.flatMap((c) => c.orderIds));
+    const orderList = [...unclaimedOrders].filter((o) =>
+      consideredIds.has(o.id),
+    );
+    const chosen = solveAssignment(
+      candidates,
+      couriers.length,
+      orderList.map((o) => o.id),
+      orderList.map(
+        (o) =>
+          10 * maxCost +
+          1000 +
+          Math.max(0, this.simTime + HORIZON - o.optimalTime),
+      ),
+    );
+    if (!chosen) return false;
+
+    chosen.forEach((candidateIndex, ci) => {
+      if (candidateIndex < 0) return;
+      const candidate = candidates[candidateIndex];
+      couriers[ci].route = candidate.route;
+      for (const routeElement of candidate.route) {
+        routeElement.order.courier = couriers[ci];
+        unclaimedOrders.delete(routeElement.order);
+      }
+    });
+    return true;
+  }
+
+  // Weight of route duration in the MIP cost. Delay is what we actually
+  // care about, but pure delay ignores the opportunity cost of courier
+  // time (e.g. waiting at a restaurant for prep is "free"), which kills
+  // throughput under load.
+  static DURATION_WEIGHT = 1;
+
+  // Like findBestRoute, but must use ALL stops and minimizes total
+  // delivery delay plus weighted route duration.
+  findMinDelayRoute(
+    courier: Courier,
+    pre: Route,
+    preCost: number,
+    stops: Stop[],
+    best: { route: Route | null; cost: number },
+  ) {
+    if (preCost >= best.cost) return;
+
+    const pickupsInPre = pre.filter((e) => e.type === "pickup");
+    if (
+      courier.carrying.size + pickupsInPre.length > this.maxBatch ||
+      (pre.at(-1)?.type === "deliver" &&
+        ![...courier.carrying, ...pickupsInPre.map((e) => e.order)].find(
+          (o) => o === pre.at(-1)?.order,
+        ))
+    ) {
+      return;
+    }
+
+    if (stops.length === 0) {
+      best.route = pre;
+      best.cost = preCost;
+      return;
+    }
+
+    for (let i = 0; i < stops.length; i++) {
+      const stop = stops[i];
+      const routeElement = new RouteElement(
+        stop.type,
+        pre.length ? pre.at(-1)!.to : courier.position,
+        pre.length ? pre.at(-1)!.end : this.simTime,
+        stop.order,
+      );
+      const newPre = pre.clone();
+      newPre.push(routeElement);
+      if (routeElement.type === "pickup") {
+        if (stop.order.placedAt + stop.order.prepTime > routeElement.end) {
+          newPre.push(
+            new RouteElement(
+              "wait",
+              routeElement.to,
+              routeElement.end,
+              stop.order,
+            ),
+          );
+        }
+      }
+      let newCost =
+        preCost +
+        MyGame.DURATION_WEIGHT * (newPre.at(-1)!.end - routeElement.start);
+      if (routeElement.type === "deliver") {
+        newCost += Math.max(0, routeElement.end - stop.order.optimalTime);
+      }
+      const newStops = [...stops.slice(0, i), ...stops.slice(i + 1)];
+      this.findMinDelayRoute(courier, newPre, newCost, newStops, best);
+    }
   }
 
   findBestRoute(
