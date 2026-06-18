@@ -14,45 +14,140 @@
         <h3>Parameters</h3>
         <div class="row">
           <span class="lbl">Restaurants</span
-          ><span class="val" id="p-restaurants"></span>
-        </div>
-        <input type="range" id="slider-restaurants" min="1" max="15" step="1" />
-        <div class="row">
-          <span class="lbl">Couriers</span
-          ><span class="val" id="p-couriers"></span>
-        </div>
-        <input type="range" id="slider-couriers" min="1" max="30" step="1" />
-        <div class="row">
-          <span class="lbl">Avg travel time</span
-          ><span class="val" id="p-travel"></span>
-        </div>
-        <input type="range" id="slider-travel" min="2" max="20" step="1" />
-        <div class="row">
-          <span class="lbl">Orders per day</span
-          ><span class="val" id="p-order-rate"></span>
+          ><span class="val" id="o-restaurantCount"></span>
         </div>
         <input
           type="range"
-          id="slider-order-interval"
+          id="i-restaurantCount"
+          min="1"
+          max="15"
+          step="1"
+          value="3"
+        />
+        <div class="row">
+          <span class="lbl">Couriers</span
+          ><span class="val" id="o-courierCount"></span>
+        </div>
+        <input
+          type="range"
+          id="i-courierCount"
+          min="1"
+          max="30"
+          step="1"
+          value="3"
+        />
+        <div class="row">
+          <span class="lbl">Avg travel time</span
+          ><span class="val" id="o-avgTravelMinutes"></span>
+        </div>
+        <input
+          type="range"
+          id="i-avgTravelMinutes"
+          min="2"
+          max="20"
+          step="1"
+          value="10"
+        />
+        <div class="row">
+          <span class="lbl">Orders per day</span
+          ><span class="val" id="o-orderRate"></span>
+        </div>
+        <input
+          type="range"
+          id="i-orderRate"
           min="10"
           max="2000"
           step="10"
+          value="70"
         />
         <div class="row">
           <span class="lbl">Prep mean</span
-          ><span class="val" id="p-prep-mean"></span>
+          ><span class="val" id="o-avgPrepTime"></span>
         </div>
-        <input type="range" id="slider-prep-mean" min="2" max="40" step="1" />
+        <input
+          type="range"
+          id="i-avgPrepTime"
+          min="2"
+          max="40"
+          step="1"
+          value="10"
+        />
         <div class="row">
           <span class="lbl">Prep std dev</span
-          ><span class="val" id="p-prep-stddev"></span>
+          ><span class="val" id="o-prepStddev"></span>
         </div>
-        <input type="range" id="slider-prep-stddev" min="0" max="20" step="1" />
+        <input
+          type="range"
+          id="i-prepStddev"
+          min="0"
+          max="20"
+          step="1"
+          value="4"
+        />
+      </div>
+
+      <div class="group">
+        <h3>Routing</h3>
         <div class="row">
           <span class="lbl">Batch size</span
-          ><span class="val" id="p-batch"></span>
+          ><span class="val" id="o-maxBatch"></span>
         </div>
-        <input type="range" id="slider-batch" min="1" max="4" step="1" />
+        <input
+          type="range"
+          id="i-maxBatch"
+          min="1"
+          max="4"
+          step="1"
+          value="1"
+        />
+        <div class="row">
+          <span class="lbl">Budget</span
+          ><span class="val" id="o-budget"></span>
+        </div>
+        <input
+          type="range"
+          id="i-budget"
+          min="10"
+          max="600"
+          step="10"
+          value="300"
+        />
+        <div class="row">
+          <span class="lbl">Horizon</span
+          ><span class="val" id="o-horizon"></span>
+        </div>
+        <input
+          type="range"
+          id="i-horizon"
+          min="5"
+          max="300"
+          step="5"
+          value="60"
+        />
+        <div class="row">
+          <span class="lbl">Duration weight</span
+          ><span class="val" id="o-durationWeight"></span>
+        </div>
+        <input
+          type="range"
+          id="i-durationWeight"
+          min="1"
+          max="30"
+          step="1"
+          value="1"
+        />
+        <div class="row">
+          <span class="lbl">Delay weight</span
+          ><span class="val" id="o-delayWeight"></span>
+        </div>
+        <input
+          type="range"
+          id="i-delayWeight"
+          min="1"
+          max="30"
+          step="1"
+          value="30"
+        />
       </div>
 
       <div class="group">
@@ -62,15 +157,16 @@
           ><span class="val" id="v-time">00:00</span>
         </div>
         <div class="row">
-          <span class="lbl">Speed</span><span class="val" id="v-speed">—</span>
+          <span class="lbl">Speed</span
+          ><span class="val" id="o-simSpeed">—</span>
         </div>
         <input
           type="range"
-          id="speed-slider"
+          id="i-simSpeed"
           min="1"
           max="120"
           step="1"
-          value="60"
+          value="10"
         />
         <div style="display: flex; gap: 6px; margin-top: 4px">
           <button id="btn-pause" style="flex: 1">PAUSE</button>
@@ -108,10 +204,6 @@
         <div class="row">
           <span class="lbl">Courier utilization</span
           ><span class="val" id="v-util">—</span>
-        </div>
-        <div class="row">
-          <span class="lbl">Multi-carry %</span
-          ><span class="val" id="v-multicarry">—</span>
         </div>
       </div>
     </div>

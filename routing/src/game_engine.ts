@@ -27,50 +27,47 @@ export class Vector {
   eq(other: Vector): boolean {
     return this.x === other.x && this.y === other.y;
   }
+
+  middle(other: Vector): Vector {
+    return this.add(other).scale(0.5);
+  }
 }
 
 export class Node {
   public id: number;
-  public static instances = new Set<Node>();
-  public static ids = new Set<number>();
+  public static instances = new Map<number, Node>();
   public static game: Game;
   public static zIndex = 0;
 
   constructor() {
-    Node.instances.add(this);
     const cls = this.constructor as typeof Node;
     if (!Object.hasOwn(cls, "instances")) {
-      cls.instances = new Set<typeof this>();
-    }
-    cls.instances.add(this);
-    if (!Object.hasOwn(cls, "ids")) {
-      cls.ids = new Set<number>();
+      cls.instances = new Map<number, Node>();
     }
     for (let i = 0; true; i++) {
-      if (!cls.ids.has(i)) {
+      if (!Node.instances.has(i)) {
         this.id = i;
-        cls.ids.add(i);
         break;
       }
     }
+    cls.instances.set(this.id, this);
+    Node.instances.set(this.id, this);
   }
 
   destroy() {
     const cls = this.constructor as typeof Node;
-    cls.instances.delete(this);
-    cls.ids.delete(this.id);
-    Node.instances.delete(this);
+    cls.instances.delete(this.id);
+    Node.instances.delete(this.id);
   }
 
   static clear() {
     if (!Object.hasOwn(this, "instances")) {
       return;
     }
-    for (const node of this.instances) {
-      Node.instances.delete(node);
+    for (const [id] of this.instances) {
+      Node.instances.delete(id);
     }
     this.instances.clear();
-    this.ids.clear();
   }
 
   step(_dt: number) {}
@@ -129,7 +126,7 @@ export class Game {
             (a.constructor as typeof Node).zIndex -
             (b.constructor as typeof Node).zIndex,
         )
-        .forEach((node) => node.draw(this.canvasCtx));
+        .forEach(([_, node]) => node.draw(this.canvasCtx));
     }
   }
 

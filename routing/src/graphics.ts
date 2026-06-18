@@ -1,4 +1,4 @@
-import { Vector } from "./lib";
+import { Vector } from "./game_engine";
 
 export function drawCircle(
   ctx: CanvasRenderingContext2D,
