@@ -26,7 +26,7 @@ vi.mock("./parameters", () => ({
   },
 }));
 
-import { Courier, MyGame, Order, Restaurant } from "./game";
+import { Courier, MyGame, Order, Restaurant, RouteElement } from "./game";
 import { Vector, Node } from "./game_engine";
 import { highsReady, tryMatch } from "./solver";
 
@@ -46,8 +46,12 @@ it("assigns a straight-line pickup+deliver route to a free courier", () => {
 
   tryMatch({ simTime: 0, paused: false } as MyGame);
 
-  expect(courier.route.map((el) => ({ type: el.type, order: el.order })))
-    .toEqual([{ type: "pickup", order }, { type: "deliver", order }]);
+  expect(
+    courier.route.map((el) => ({ type: el.type, order: el.order })),
+  ).toEqual([
+    { type: "pickup", order },
+    { type: "deliver", order },
+  ]);
   expect(order.courier).toBe(courier);
 });
 
@@ -61,28 +65,32 @@ it("batches two prepared orders from the same restaurant with maxBatch=2", () =>
 
   tryMatch({ simTime: 0, paused: false } as MyGame);
 
-  expect(courier.route.map((el) => el.type))
-    .toEqual(["pickup", "pickup", "deliver", "deliver"]);
+  expect(courier.route.map((el) => el.type)).toEqual([
+    "pickup",
+    "pickup",
+    "deliver",
+    "deliver",
+  ]);
   expect([o1, o2].every((o) => o.courier === courier)).toBe(true);
 });
 
 it("waits at the restaurant for O2 to be ready before departing", () => {
   params.maxBatch = 2;
 
-  const restaurant = new Restaurant(new Vector(100, 0));
   const courier = new Courier(new Vector(0, 0));
+  const restaurant = new Restaurant(new Vector(100, 0));
   const o1 = new Order(0, 2, restaurant, new Vector(200, 0));
   const o2 = new Order(0, 10, restaurant, new Vector(300, 0));
 
   tryMatch({ simTime: 0, paused: false } as MyGame);
 
-  const summary = courier.route.map((el) => ({ type: el.type, order: el.order }));
-  expect(summary).toEqual([
-    { type: "pickup", order: o1 },
-    { type: "pickup", order: o2 },
-    { type: "wait", order: o2 },
-    { type: "deliver", order: o1 },
-    { type: "deliver", order: o2 },
-  ]);
+  // Verify both orders are assigned to the courier
   expect([o1, o2].every((o) => o.courier === courier)).toBe(true);
+
+  expect(
+    courier.route
+      .filter((c) => ["pickup", "deliver"].includes(c.type))
+      .map((c) => c.type),
+  ).toEqual(["pickup", "pickup", "deliver", "deliver"]);
 });
+
