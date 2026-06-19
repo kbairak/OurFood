@@ -8,7 +8,7 @@ import {
   Route,
   RouteElement,
   courierSpeed,
-} from "./main";
+} from "./game";
 import { flatten, subsets, subsetsUpTo, subsetsUpToCount } from "./itertools";
 import { outputs, parameters } from "./parameters";
 
@@ -498,7 +498,7 @@ function isGeometricallyPromising(courier: Courier, subset: Order[]): boolean {
       const cosTheta = dot / (mag1 * mag2);
 
       // Prune if orders point in strongly opposite directions (angle > 135°)
-      if (cosTheta < -0.7) return false;
+      if (cosTheta < parameters.get("geoCutoff")) return false;
     }
   }
 

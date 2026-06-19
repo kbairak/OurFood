@@ -31,6 +31,7 @@ const WIRES = {
   courierCount: new Wire("i-courierCount", "o-courierCount"),
   delayWeight: new Wire("i-delayWeight", "o-delayWeight"),
   durationWeight: new Wire("i-durationWeight", "o-durationWeight"),
+  geoCutoff: new Wire("i-geoCutoff", "o-geoCutoff"),
   horizon: new Wire("i-horizon", "o-horizon"),
   maxBatch: new Wire("i-maxBatch", "o-maxBatch"),
   orderRate: new Wire("i-orderRate", "o-orderRate", (v) => `${v} /day`),
