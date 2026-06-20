@@ -71,6 +71,14 @@
   contribution rate. It decreases as order volume grows and falls to its floor
   once the reserve is fully funded.
 
+- **Platform fee per order**: A small fee that is added on top of the order
+  price intended to cover the platform's cost. Not having a platform fee would
+  be give us a competitive advantage over other platforms but having even a
+  small platform fee makes the break-event point a lot easier to achieve. It is
+  not decided yet whether we will have one for a safety margin at the beginning
+  and pledge to remove it once things stabilize or if we will start without it
+  having it as an option to help us out if things don't go well initially.
+
 ## Restaurant reimbursement and growth fund contribution analysis
 
 To simplify things, let's assume it's the end of the month and so far we've been
@@ -415,6 +423,25 @@ If we set worse values for these variables:
 ![bad screenshot](screenshots/bad.png)
 
 Then deficit grows with daily orders. This would be catastrophic.
+
+### Effects of platform fee
+
+The screenshots above have a zero platform fee. Here is what happens if we set a
+€0.50 platform fee per order:
+
+![small fee screenshot](screenshots/small_fee.png)
+
+- The break even point drops from ~350 orders/day to ~250 orders/day
+- The effect is significant which suggests that it is a valuable tool to help
+  improve the margins
+
+Here is what happens if we set a €1.00 platform fee per order:
+
+![small fee screenshot](screenshots/small_fee.png)
+
+- The break even point drops further to ~200 orders/day
+- The drop is not as significant, which suggests that there are diminishing
+  returns to further increasing the platform fee
 
 ## Invoices, VAT
 

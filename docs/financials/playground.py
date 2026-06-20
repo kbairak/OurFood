@@ -1,5 +1,9 @@
 # Run with: uvx --with plotly --with numpy streamlit run playground.py
 
+import dataclasses
+import typing
+from dataclasses import dataclass
+from typing import Annotated
 import numpy as np
 import streamlit as st
 import plotly.graph_objects as go
@@ -10,21 +14,166 @@ from plotly.subplots import make_subplots
 COURIER_TIME_RATIO = (365 - 22) * 5 / 7 / 365
 
 
-def compute(p):
-    r = {}
-    r["gmv"] = p["orders_per_day"] * p["avg_order_value"] * 30
+@dataclass
+class InputAnnotation:
+    group: str
+    display: str
+    default: float
+    min: float
+    max: float
+    step: float
 
-    k = p["orders_per_courier_per_day"]
-    r["courier_count"] = p["orders_per_day"] / k / COURIER_TIME_RATIO if k > 0 else 0
 
-    r["variable_costs"] = r["gmv"] * p["variable_cost_over_gmv"]
-    r["courier_cost"] = r["courier_count"] * (
-        p["courier_wage"] + p["courier_equipment_reimbursement"]
+@dataclass
+class Input:
+    orders_per_day: Annotated[
+        float, InputAnnotation("Operations", "Orders per day", 60, 10, 2000, 10)
+    ] = 0.0
+    avg_order_value: Annotated[
+        float, InputAnnotation("Operations", "Avg order value (€)", 18, 10, 35, 1)
+    ] = 0.0
+    orders_per_courier_per_day: Annotated[
+        float, InputAnnotation("Operations", "Orders / courier / day", 30, 10, 60, 1)
+    ] = 0.0
+    restaurant_commision_cap: Annotated[
+        float, InputAnnotation("Operations", "Commission cap", 0.30, 0.10, 0.45, 0.01)
+    ] = 0.0
+    per_order_fee: Annotated[
+        float,
+        InputAnnotation("Operations", "Per-order platform fee (€)", 0, 0, 3, 0.25),
+    ] = 0.0
+    variable_cost_over_gmv: Annotated[
+        float,
+        InputAnnotation(
+            "Operations", "Variable costs (% of GMV)", 0.05, 0.01, 0.15, 0.005
+        ),
+    ] = 0.0
+    growth_fund_contribution_rate: Annotated[
+        float,
+        InputAnnotation(
+            "Operations", "Growth fund contribution rate", 0.05, 0.01, 0.20, 0.01
+        ),
+    ] = 0.0
+    growth_fund_balance_ratio: Annotated[
+        float,
+        InputAnnotation(
+            "Operations",
+            "Growth fund fill level (0=empty, 1=full)",
+            0.17,
+            0.0,
+            1.1,
+            0.05,
+        ),
+    ] = 0.0
+    courier_wage: Annotated[
+        float,
+        InputAnnotation(
+            "Staff costs", "Courier wage / month (€)", 2195, 1500, 3500, 50
+        ),
+    ] = 0.0
+    courier_equipment_reimbursement: Annotated[
+        float,
+        InputAnnotation("Staff costs", "Courier equipment reimb (€)", 50, 0, 200, 10),
+    ] = 0.0
+    developer_count: Annotated[
+        float, InputAnnotation("Staff costs", "Developer count", 2, 1, 5, 1)
+    ] = 0.0
+    developer_wage: Annotated[
+        float,
+        InputAnnotation(
+            "Staff costs", "Developer cost / month (€)", 4281, 3000, 6000, 100
+        ),
+    ] = 0.0
+    manager_count: Annotated[
+        float, InputAnnotation("Staff costs", "Manager count", 1, 0, 3, 1)
+    ] = 0.0
+    manager_wage: Annotated[
+        float,
+        InputAnnotation(
+            "Staff costs", "Manager cost / month (€)", 3302, 2000, 5000, 100
+        ),
+    ] = 0.0
+    server_cost: Annotated[
+        float, InputAnnotation("Opex", "Servers (€)", 400, 0, 2000, 50)
+    ] = 0.0
+    twilio_cost: Annotated[
+        float, InputAnnotation("Opex", "Twilio (€)", 50, 0, 200, 10)
+    ] = 0.0
+    sentry_cost: Annotated[
+        float, InputAnnotation("Opex", "Sentry (€)", 25, 0, 100, 5)
+    ] = 0.0
+    intercom_cost: Annotated[
+        float, InputAnnotation("Opex", "Intercom (€)", 75, 0, 300, 25)
+    ] = 0.0
+    mixpanel_cost: Annotated[
+        float, InputAnnotation("Opex", "Mixpanel (€)", 30, 0, 200, 10)
+    ] = 0.0
+    postmark_cost: Annotated[
+        float, InputAnnotation("Opex", "Postmark (€)", 20, 0, 100, 5)
+    ] = 0.0
+    apple_store_cost: Annotated[
+        float, InputAnnotation("Opex", "Apple Developer (€)", 9, 0, 20, 1)
+    ] = 0.0
+    docusign_cost: Annotated[
+        float, InputAnnotation("Opex", "DocuSign (€)", 25, 0, 100, 5)
+    ] = 0.0
+    accounting_cost: Annotated[
+        float, InputAnnotation("Opex", "Accounting (€)", 350, 100, 800, 50)
+    ] = 0.0
+    legal_cost: Annotated[
+        float, InputAnnotation("Opex", "Legal (€)", 200, 0, 1000, 50)
+    ] = 0.0
+    rent: Annotated[float, InputAnnotation("Opex", "Rent (€)", 600, 0, 2000, 100)] = 0.0
+    utilities_cost: Annotated[
+        float, InputAnnotation("Opex", "Utilities (€)", 120, 0, 500, 20)
+    ] = 0.0
+
+
+@dataclass
+class OutputAnnotation:
+    display: str
+
+
+@dataclass
+class Output:
+    courier_cost: Annotated[float, OutputAnnotation("Courier cost (€)")] = 0.0
+    courier_count: Annotated[float, OutputAnnotation("Courier count")] = 0.0
+    deficit: Annotated[float, OutputAnnotation("Monthly deficit (€)")] = 0.0
+    gmv: Annotated[float, OutputAnnotation("Monthly GMV (€)")] = 0.0
+    growth_fund_contribution: Annotated[
+        float, OutputAnnotation("Growth fund contribution (€)")
+    ] = 0.0
+    ktlo: Annotated[float, OutputAnnotation("KTLO (€)")] = 0.0
+    net_surplus: Annotated[float, OutputAnnotation("Net surplus (€)")] = 0.0
+    operational_expenses: Annotated[
+        float, OutputAnnotation("Operational expenses (€)")
+    ] = 0.0
+    restaurant_commission_pct: Annotated[
+        float, OutputAnnotation("Effective commission (%)")
+    ] = 0.0
+    restaurant_reimbursement: Annotated[
+        float, OutputAnnotation("Restaurant reimbursement (€)")
+    ] = 0.0
+    variable_costs: Annotated[float, OutputAnnotation("Variable costs (€)")] = 0.0
+
+
+def compute(inp: Input) -> Output:
+    output = Output()
+    food_gmv = inp.orders_per_day * inp.avg_order_value * 30
+    platform_fee_revenue = inp.orders_per_day * 30 * inp.per_order_fee
+    output.gmv = food_gmv + platform_fee_revenue
+
+    k = inp.orders_per_courier_per_day
+    output.courier_count = inp.orders_per_day / k / COURIER_TIME_RATIO if k > 0 else 0
+
+    output.variable_costs = output.gmv * inp.variable_cost_over_gmv
+    output.courier_cost = output.courier_count * (
+        inp.courier_wage + inp.courier_equipment_reimbursement
     )
-    r["developer_cost"] = p["developer_count"] * p["developer_wage"]
-    r["manager_cost"] = p["manager_count"] * p["manager_wage"]
-    r["operational_expenses"] = sum(
-        p[v]
+    developer_cost = inp.developer_count * inp.developer_wage
+    manager_cost = inp.manager_count * inp.manager_wage
+    output.operational_expenses = sum(
+        getattr(inp, v)
         for v in (
             "server_cost",
             "twilio_cost",
@@ -40,144 +189,76 @@ def compute(p):
             "utilities_cost",
         )
     )
-    r["ktlo"] = (
-        r["courier_cost"]
-        + r["developer_cost"]
-        + r["manager_cost"]
-        + r["operational_expenses"]
+    output.ktlo = (
+        output.courier_cost
+        + developer_cost
+        + manager_cost
+        + output.operational_expenses
     )
-    r["net_surplus"] = r["gmv"] - r["ktlo"] - r["variable_costs"]
-    r["minimum_restaurant_reimbursement"] = (1 - p["restaurant_commision_cap"]) * r[
-        "gmv"
-    ]
+    output.net_surplus = output.gmv - output.ktlo - output.variable_costs
+    minimum_restaurant_reimbursement = (1 - inp.restaurant_commision_cap) * food_gmv
 
-    growth_fund_target = max(0, 1 - p["growth_fund_balance_ratio"]) * 3 * r["ktlo"]
-    growth_fund_cap_by_rate = r["net_surplus"] * p["growth_fund_contribution_rate"]
-    growth_fund_cap_by_surplus = (
-        r["net_surplus"] - r["minimum_restaurant_reimbursement"]
-    )
-    r["growth_fund_contribution"] = max(
+    growth_fund_target = max(0, 1 - inp.growth_fund_balance_ratio) * 3 * output.ktlo
+    growth_fund_cap_by_rate = output.net_surplus * inp.growth_fund_contribution_rate
+    growth_fund_cap_by_surplus = output.net_surplus - minimum_restaurant_reimbursement
+    output.growth_fund_contribution = max(
         min(growth_fund_target, growth_fund_cap_by_rate, growth_fund_cap_by_surplus),
         0,
     )
 
-    r["restaurant_reimbursement"] = max(
-        r["net_surplus"] - r["growth_fund_contribution"],
-        r["minimum_restaurant_reimbursement"],
+    output.restaurant_reimbursement = max(
+        output.net_surplus - output.growth_fund_contribution,
+        minimum_restaurant_reimbursement,
     )
-    r["restaurant_commission_pct"] = (
-        (r["gmv"] - r["restaurant_reimbursement"]) / r["gmv"] * 100
-        if r["gmv"] > 0
+    output.restaurant_commission_pct = (
+        (food_gmv - output.restaurant_reimbursement) / food_gmv * 100
+        if food_gmv > 0
         else 0.0
     )
-    r["deficit"] = (
-        r["ktlo"]
-        + r["variable_costs"]
-        + r["growth_fund_contribution"]
-        + r["restaurant_reimbursement"]
-        - r["gmv"]
+    output.deficit = (
+        output.ktlo
+        + output.variable_costs
+        + output.growth_fund_contribution
+        + output.restaurant_reimbursement
+        - output.gmv
     )
-    return r
+    return output
 
 
-# ── Variable metadata: (label, default, min, max, step) ──────────────────────
+# ── Variable metadata ─────────────────────────────────────────────────────────
 
-INPUT_META = {
-    "orders_per_day": ("Orders per day", 60, 10, 2000, 10),
-    "avg_order_value": ("Avg order value (€)", 18, 10, 35, 1),
-    "orders_per_courier_per_day": ("Orders / courier / day", 30, 10, 60, 1),
-    "restaurant_commision_cap": ("Commission cap", 0.30, 0.10, 0.45, 0.01),
-    "variable_cost_over_gmv": ("Variable costs (% of GMV)", 0.05, 0.01, 0.15, 0.005),
-    "growth_fund_contribution_rate": (
-        "Growth fund contribution rate",
-        0.05,
-        0.01,
-        0.20,
-        0.01,
-    ),
-    "growth_fund_balance_ratio": (
-        "Growth fund fill level (0=empty, 1=full)",
-        0.17,
-        0.0,
-        1.1,
-        0.05,
-    ),
-    "courier_wage": ("Courier wage / month (€)", 2195, 1500, 3500, 50),
-    "courier_equipment_reimbursement": ("Courier equipment reimb (€)", 50, 0, 200, 10),
-    "developer_count": ("Developer count", 2, 1, 5, 1),
-    "developer_wage": ("Developer cost / month (€)", 4281, 3000, 6000, 100),
-    "manager_count": ("Manager count", 1, 0, 3, 1),
-    "manager_wage": ("Manager cost / month (€)", 3302, 2000, 5000, 100),
-    "server_cost": ("Servers (€)", 400, 0, 2000, 50),
-    "twilio_cost": ("Twilio (€)", 50, 0, 200, 10),
-    "sentry_cost": ("Sentry (€)", 25, 0, 100, 5),
-    "intercom_cost": ("Intercom (€)", 75, 0, 300, 25),
-    "mixpanel_cost": ("Mixpanel (€)", 30, 0, 200, 10),
-    "postmark_cost": ("Postmark (€)", 20, 0, 100, 5),
-    "apple_store_cost": ("Apple Developer (€)", 9, 0, 20, 1),
-    "docusign_cost": ("DocuSign (€)", 25, 0, 100, 5),
-    "accounting_cost": ("Accounting (€)", 350, 100, 800, 50),
-    "legal_cost": ("Legal (€)", 200, 0, 1000, 50),
-    "rent": ("Rent (€)", 600, 0, 2000, 100),
-    "utilities_cost": ("Utilities (€)", 120, 0, 500, 20),
-}
 
-OUTPUT_META = {
-    "deficit": "Monthly deficit (€)",
-    "net_surplus": "Net surplus (€)",
-    "restaurant_commission_pct": "Effective commission (%)",
-    "gmv": "Monthly GMV (€)",
-    "courier_count": "Courier count",
-    "ktlo": "KTLO (€)",
-    "courier_cost": "Courier cost (€)",
-    "variable_costs": "Variable costs (€)",
-    "growth_fund_contribution": "Growth fund contribution (€)",
-    "restaurant_reimbursement": "Restaurant reimbursement (€)",
-    "operational_expenses": "Operational expenses (€)",
-}
+def _get_input_meta(name):
+    meta_for = {f.name: f for f in dataclasses.fields(Input)}
+    for arg in typing.get_args(meta_for[name].type):
+        if isinstance(arg, InputAnnotation):
+            return (arg.display, arg.default, arg.min, arg.max, arg.step)
+    raise KeyError(name)
 
-GROUPS = [
-    (
-        "Operations",
-        [
-            "orders_per_day",
-            "avg_order_value",
-            "orders_per_courier_per_day",
-            "restaurant_commision_cap",
-            "variable_cost_over_gmv",
-            "growth_fund_contribution_rate",
-            "growth_fund_balance_ratio",
-        ],
-    ),
-    (
-        "Staff costs",
-        [
-            "courier_wage",
-            "courier_equipment_reimbursement",
-            "developer_count",
-            "developer_wage",
-            "manager_count",
-            "manager_wage",
-        ],
-    ),
-    (
-        "Opex",
-        [
-            "server_cost",
-            "twilio_cost",
-            "sentry_cost",
-            "intercom_cost",
-            "mixpanel_cost",
-            "postmark_cost",
-            "apple_store_cost",
-            "docusign_cost",
-            "accounting_cost",
-            "legal_cost",
-            "rent",
-            "utilities_cost",
-        ],
-    ),
-]
+
+def _all_input_keys():
+    return [f.name for f in dataclasses.fields(Input)]
+
+
+def _build_groups():
+    groups = {}
+    for field in dataclasses.fields(Input):
+        for arg in typing.get_args(field.type):
+            if isinstance(arg, InputAnnotation):
+                groups.setdefault(arg.group, []).append(field.name)
+    return list(groups.items())
+
+
+def _get_output_meta(name):
+    meta_for = {f.name: f for f in dataclasses.fields(Output)}
+    for arg in typing.get_args(meta_for[name].type):
+        if isinstance(arg, OutputAnnotation):
+            return arg.display
+    raise KeyError(name)
+
+
+def _all_output_keys():
+    return [f.name for f in dataclasses.fields(Output)]
 
 
 # ── App ───────────────────────────────────────────────────────────────────────
@@ -189,20 +270,19 @@ col_x, col_y = st.columns([1, 2])
 with col_x:
     x_key = st.selectbox(
         "X axis (sweep)",
-        list(INPUT_META.keys()),
-        format_func=lambda k: INPUT_META[k][0],
+        _all_input_keys(),
+        format_func=lambda k: _get_input_meta(k)[0],
     )
 with col_y:
     y_keys = st.multiselect(
         "Y axis",
-        list(OUTPUT_META.keys()),
+        _all_output_keys(),
         default=[
-            "gmv",
             "deficit",
             "growth_fund_contribution",
             "restaurant_commission_pct",
         ],
-        format_func=lambda k: OUTPUT_META[k],
+        format_func=_get_output_meta,
     )
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -210,9 +290,9 @@ with col_y:
 st.sidebar.header("Fixed parameters")
 params = {}
 
-x_label, x_default, x_vmin, x_vmax, x_step = INPUT_META[x_key]
+x_label, x_default, x_vmin, x_vmax, x_step = _get_input_meta(x_key)
 
-for group_label, keys in GROUPS:
+for group_label, keys in _build_groups():
     visible = [k for k in keys if k != x_key]
     if not visible:
         continue
@@ -225,7 +305,7 @@ for group_label, keys in GROUPS:
 
     def render_sliders(target, visible_keys):
         for key in visible_keys:
-            label, default, vmin, vmax, step = INPUT_META[key]
+            label, default, vmin, vmax, step = _get_input_meta(key)
             if isinstance(step, float) or isinstance(default, float):
                 params[key] = target.slider(
                     label,
@@ -263,9 +343,10 @@ x_range = st.sidebar.slider(
 x_vals = np.linspace(x_range[0], x_range[1], 300)
 results = {k: [] for k in y_keys}
 for xv in x_vals:
-    r = compute({**params, x_key: xv})
+    inp = Input(**{**params, x_key: xv})
+    r = compute(inp)
     for k in y_keys:
-        results[k].append(r[k])
+        results[k].append(getattr(r, k))
 
 # ── Plot ──────────────────────────────────────────────────────────────────────
 
@@ -278,7 +359,7 @@ else:
         rows=len(y_keys),
         cols=1,
         shared_xaxes=True,
-        subplot_titles=[OUTPUT_META[k] for k in y_keys],
+        subplot_titles=[_get_output_meta(k) for k in y_keys],
         vertical_spacing=0.08 if len(y_keys) > 1 else 0,
     )
 
@@ -288,7 +369,7 @@ else:
                 x=x_vals,
                 y=results[k],
                 mode="lines",
-                name=OUTPUT_META[k],
+                name=_get_output_meta(k),
                 line={"color": colors[i % len(colors)]},
                 showlegend=False,
             ),
