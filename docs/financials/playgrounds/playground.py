@@ -263,8 +263,8 @@ def _all_output_keys():
 
 # ── App ───────────────────────────────────────────────────────────────────────
 
-st.set_page_config(page_title="OurFood Playground", layout="wide")
-st.title("OurFood — Financial Playground")
+st.set_page_config(page_title="FairBite Playground", layout="wide")
+st.title("FairBite — Financial Playground")
 
 col_x, col_y = st.columns([1, 2])
 with col_x:

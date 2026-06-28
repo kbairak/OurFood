@@ -1,4 +1,4 @@
-# Funding Opportunities for OurFood
+# Funding Opportunities for FairBite
 
 Research conducted: 2026-05-15
 
@@ -21,7 +21,7 @@ Research conducted: 2026-05-15
 
 - Total budget: €14 billion across all programs
 - Requirement: Usually requires consortia of 3+ organizations
-- **Best work programmes for OurFood:**
+- **Best work programmes for FairBite:**
   - **WP5 - Culture, Creativity & Inclusive Society:** Social innovation,
     participatory governance, community-based approaches
   - **WP9 - Food Systems:** Place-based, circular models in food systems where

@@ -1,4 +1,4 @@
-# OurFood — Financial Model
+# FairBite — Financial Model
 
 ## Definitions
 
@@ -389,7 +389,7 @@ which output variables to plot as graphs.
 You can run the playground by running:
 
 ```sh
-uvx --with plotly --with numpy streamlit run https://github.com/kbairak/OurFood/raw/refs/heads/main/docs/financials/playgrounds/playground.py
+uvx --with plotly --with numpy streamlit run https://github.com/kbairak/FairBite/raw/refs/heads/main/docs/financials/playgrounds/playground.py
 ```
 
 If you have [uv](https://docs.astral.sh/uv/) installed.
@@ -616,7 +616,7 @@ operating deficit. All €150k of the growth fund is exhausted by month 5.
    vouchers and ads; even a fraction of that matters for the cash required
    before break-even.
 
-2. **Insurance per unit** — TIER paid €11/scooter/month. OurFood bundles legal
+2. **Insurance per unit** — TIER paid €11/scooter/month. FairBite bundles legal
    and accounting into €200/month opex but has no per-courier or per-ride
    insurance line. Delivery insurance quotes should be obtained and modelled.
 
@@ -626,16 +626,16 @@ operating deficit. All €150k of the growth fund is exhausted by month 5.
    light wear but not incident costs.
 
 4. **Field operations staff** — TIER separates Field Operations FTEs
-   (€1,100/month gross) from management. OurFood's single "operations manager"
+   (€1,100/month gross) from management. FairBite's single "operations manager"
    role may undercount the on-ground staff needed for courier support,
    restaurant onboarding, and daily issue resolution as the team scales.
 
 5. **User / restaurant churn** — TIER shows only 17–38% of registered users are
-   active monthly. OurFood assumes all adopted restaurants and orders
+   active monthly. FairBite assumes all adopted restaurants and orders
    materialise with no dropout. A retention/activation funnel should be
    modelled.
 
-6. **VAT / tax in cash flow** — TIER models 24% corporate tax. OurFood's VAT
+6. **VAT / tax in cash flow** — TIER models 24% corporate tax. FairBite's VAT
    section remains unresolved ("needs further research"). Depending on the
    invoicing model (agent vs principal), VAT could materially change cash
    requirements and should be resolved before the financial model is finalised.

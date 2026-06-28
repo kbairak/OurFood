@@ -44,7 +44,7 @@ authoritative dataset is freely available at city level.
 
 **Working estimate: ~1,500–2,000 total food venues in Patras.**
 
-### Market segmentation for OurFood
+### Market segmentation for FairBite
 
 | Segment                        | Venues      | Notes                               |
 | ------------------------------ | ----------- | ----------------------------------- |
@@ -119,7 +119,7 @@ $79/user/year.
   from 27M annual orders ÷ 21,000 efood stores.
 - **Active, committed restaurant (mature platform):** 15–25 orders/day
 - **Upper bound (popular, delivery-focused venue):** 30–40 orders/day
-- **OurFood early phase (low customer adoption):** 5–10 orders/day
+- **FairBite early phase (low customer adoption):** 5–10 orders/day
 
 The long tail of low-activity cafes drags the platform average down sharply.
 Planning should use the early-phase figure until customer adoption is

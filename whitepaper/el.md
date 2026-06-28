@@ -1,4 +1,4 @@
-# OurFood: Μια Πλατφόρμα για Δίκαιο Delivery Φαγητού
+# FairBite: Μια Πλατφόρμα για Δίκαιο Delivery Φαγητού
 
 _[English](/whitepaper/en.md)_
 
@@ -219,5 +219,5 @@ _[English](/whitepaper/en.md)_
 
 Αν ταυτίζεστε με κάτι από αυτά, επικοινωνήστε.
 
-[https://github.com/kbairak/OurFood](https://github.com/kbairak/OurFood) |
+[https://github.com/kbairak/FairBite](https://github.com/kbairak/FairBite) |
 Forum/chat κοινότητας (σύντομα) | [ikijob@gmail.com](mailto:ikijob@gmail.com)

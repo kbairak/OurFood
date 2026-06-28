@@ -1,10 +1,10 @@
-# OurFood Legal Structure (Greece)
+# FairBite Legal Structure (Greece)
 
 ## Greek Social Cooperative Enterprises (ΚοινΣΕπ)
 
 Greece's **Law 4430/2016** (as amended by Law 5078/2023) establishes Social
 Cooperative Enterprises (Κοινωνικές Συνεταιριστικές Επιχειρήσεις - ΚοινΣΕπ) as
-part of the Social & Solidarity Economy framework. OurFood fits as a **Type C
+part of the Social & Solidarity Economy framework. FairBite fits as a **Type C
 ΚοινΣΕπ** (Collective and Productive Purpose), which targets collective needs
 through local product utilization, preservation of traditional activities, and
 public utility services. Requirements: minimum 5 members, one member = one vote
@@ -18,7 +18,7 @@ and 11 regional SSE Unions.
 
 ## Ideal Governance Structure
 
-This describes how OurFood would operate if Greek law permitted all desired
+This describes how FairBite would operate if Greek law permitted all desired
 mechanisms.
 
 ### Membership & Joining
@@ -115,7 +115,7 @@ structure.
 
 - Greek law mandates "one member = one vote" across ALL members in General
   Assembly
-- OurFood needs 33/33/33 class-based voting where each class has equal power
+- FairBite needs 33/33/33 class-based voting where each class has equal power
   regardless of size
 
 **Severity:** CRITICAL - Fundamental to the governance model
@@ -176,7 +176,7 @@ structure.
 - Total board size must be **odd number**
 - Board positions are **unpaid**
 
-**Impact on OurFood:**
+**Impact on FairBite:**
 
 - 7-member board: 3 designated positions + 4 additional members
 - No conflict with ideal structure (already using odd number)
@@ -190,7 +190,7 @@ structure.
 
 - Board positions must be **unpaid** (Greek law)
 - Board members elected by General Assembly
-- OurFood ideal: CEO holds 1 board seat
+- FairBite ideal: CEO holds 1 board seat
 
 **Severity:** LOW - Solvable with role separation
 

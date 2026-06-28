@@ -345,8 +345,8 @@ def simulate(
 
 # ── Streamlit app ─────────────────────────────────────────────────────────────
 
-st.set_page_config(page_title="OurFood — Scenarios", layout="wide")
-st.title("OurFood — Scenario Planner")
+st.set_page_config(page_title="FairBite — Scenarios", layout="wide")
+st.title("FairBite — Scenario Planner")
 
 # ── Sidebar: launch adoption ──────────────────────────────────────────────────
 

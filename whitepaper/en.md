@@ -1,4 +1,4 @@
-# OurFood: A Platform for Fair Food Delivery
+# FairBite: A Platform for Fair Food Delivery
 
 _[Ελληνικά](/whitepaper/el.md)_
 
@@ -200,5 +200,5 @@ This is a solo effort in the earliest stages. I'm looking for:
 
 If any of this resonates, reach out.
 
-[https://github.com/kbairak/OurFood](https://github.com/kbairak/OurFood) |
+[https://github.com/kbairak/FairBite](https://github.com/kbairak/FairBite) |
 Community forum/chat (coming soon) | [ikijob@gmail.com](mailto:ikijob@gmail.com)
